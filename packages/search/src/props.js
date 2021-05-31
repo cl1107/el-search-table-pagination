@@ -18,7 +18,7 @@ export const formProps = {
     default: false
   },
   labelWidth: Number,
-  itemWidth: Number,
+  itemWidth: String,
   submitHandler: Function,
   submitLoading: {
     type: Boolean,

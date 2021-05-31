@@ -1,3 +1,9 @@
+# changeLog
+ - itemWidth => String
+ - 增加formBtn插槽
+ - itemType增加datetime类型
+ - form 非inline时布局改为flex，需要传入itemWidth:100% 来达到更好的效果
+
 # Element search table pagination
 
 ![npm](https://img.shields.io/npm/v/el-search-table-pagination.svg)

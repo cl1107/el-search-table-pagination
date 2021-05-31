@@ -16,7 +16,11 @@
       :showResetBtn="formOptions.showResetBtn"
       :submitBtnText="formOptions.submitBtnText"
       :resetBtnText="formOptions.resetBtnText"
-      :resetBtnCallback="formOptions.resetBtnCallback" />
+      :resetBtnCallback="formOptions.resetBtnCallback">
+      <!-- <template v-slot:formBtn> -->
+        <slot name="formBtn" slot="formBtn"></slot>
+      <!-- </template> -->
+      </search-form>
 
     <slot name="form" :loading="loading" :search="searchHandler" />
 
