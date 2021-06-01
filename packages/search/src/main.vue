@@ -7,9 +7,15 @@
     @submit.native.prevent="searchHandler()"
     :label-width="labelWidth ? labelWidth + 'px' : ''"
   >
-    <el-row :gutter="10" type="flex" justify="between" style="flex-wrap:wrap;align-items:center;" v-if="!inline">
+    <el-row
+      :gutter="10"
+      type="flex"
+      justify="between"
+      style="flex-wrap: wrap; align-items: center"
+      v-if="!inline"
+    >
       <el-col
-        style="min-width:320px"
+        style="min-width: 320px"
         :xs="24"
         :sm="12"
         :md="12"
@@ -121,143 +127,155 @@
           />
         </el-form-item>
       </el-col>
-      <el-col :xs="24"
+      <el-col
+        :xs="24"
         :sm="12"
         :md="12"
         :lg="8"
-        :xl="6" style="flex:1 1 375px">
+        :xl="6"
+        style="flex: 1 1 375px"
+      >
         <el-form-item label="" label-width="0">
-          <div style="display:flex;justify-content:flex-end;">
-          <el-button
-            type="primary"
-            :size="size"
-            @click="searchHandler"
-            :loading="submitLoading"
+          <div
+            style="
+              display: flex;
+              justify-content: flex-end;
+              align-items: center;
+            "
           >
-            {{ submitBtnText }}
-          </el-button>
-          <el-button
-            type="primary"
-            :plain="true"
-            :size="size"
-            v-if="showResetBtn"
-            @click="resetForm"
-            :loading="submitLoading"
-          >
-            {{ resetBtnText }}
-          </el-button>
-          <slot name="formBtn"></slot>
+            <el-button
+              type="primary"
+              :size="size"
+              @click="searchHandler"
+              :loading="submitLoading"
+            >
+              {{ submitBtnText }}
+            </el-button>
+            <el-button
+              type="primary"
+              :plain="true"
+              :size="size"
+              v-if="showResetBtn"
+              @click="resetForm"
+              :loading="submitLoading"
+            >
+              {{ resetBtnText }}
+            </el-button>
+            <slot name="formBtn"></slot>
           </div>
         </el-form-item>
       </el-col>
     </el-row>
     <template v-else>
       <el-form-item
-          v-for="(form, index) in forms"
-          :key="index"
-          :prop="form.itemType != 'daterange' ? form.prop : datePrefix + index"
-          :label="form.label"
-          :rules="form.rules || []"
-          :label-width="form.labelWidth ? form.labelWidth + 'px' : ''"
+        v-for="(form, index) in forms"
+        :key="index"
+        :prop="form.itemType != 'daterange' ? form.prop : datePrefix + index"
+        :label="form.label"
+        :rules="form.rules || []"
+        :label-width="form.labelWidth ? form.labelWidth + 'px' : ''"
+      >
+        <el-input
+          v-if="form.itemType === 'input' || form.itemType === undefined"
+          v-model="params[form.modelValue]"
+          :size="form.size ? form.size : size"
+          :readonly="form.readonly"
+          :disabled="form.disabled"
+          :clearable="form.clearable"
+          :placeholder="form.placeholder"
+          :style="
+            itemStyle + (form.itemWidth ? `width: ${form.itemWidth};` : '')
+          "
+        />
+        <el-select
+          v-else-if="form.itemType === 'select'"
+          v-model="params[form.modelValue]"
+          :size="form.size ? form.size : size"
+          :disabled="form.disabled"
+          :placeholder="form.placeholder"
+          :clearable="form.clearable"
+          :multiple="form.multiple"
+          :style="
+            itemStyle + (form.itemWidth ? `width: ${form.itemWidth};` : '')
+          "
         >
-          <el-input
-            v-if="form.itemType === 'input' || form.itemType === undefined"
-            v-model="params[form.modelValue]"
-            :size="form.size ? form.size : size"
-            :readonly="form.readonly"
-            :disabled="form.disabled"
-            :clearable="form.clearable"
-            :placeholder="form.placeholder"
-            :style="
-              itemStyle + (form.itemWidth ? `width: ${form.itemWidth};` : '')
+          <el-option
+            v-for="(option, optionIndex) in form.options"
+            :key="optionIndex + '_local'"
+            :value="
+              typeof option === 'object'
+                ? option[form.valueKey || 'value']
+                : option
+            "
+            :label="
+              typeof option === 'object'
+                ? option[form.labelKey || 'label']
+                : option
             "
           />
-          <el-select
-            v-else-if="form.itemType === 'select'"
-            v-model="params[form.modelValue]"
-            :size="form.size ? form.size : size"
-            :disabled="form.disabled"
-            :placeholder="form.placeholder"
-            :clearable="form.clearable"
-            :multiple="form.multiple"
-            :style="
-              itemStyle + (form.itemWidth ? `width: ${form.itemWidth};` : '')
-            "
-          >
-            <el-option
-              v-for="(option, optionIndex) in form.options"
-              :key="optionIndex + '_local'"
-              :value="
-                typeof option === 'object'
-                  ? option[form.valueKey || 'value']
-                  : option
-              "
-              :label="
-                typeof option === 'object'
-                  ? option[form.labelKey || 'label']
-                  : option
-              "
-            />
-            <el-option
-              v-for="(op, opIndex) in selectOptions[selectOptionPrefix + index]"
-              :key="opIndex + '_remote'"
-              :value="
-                typeof op === 'object' ? op[form.valueKey || 'value'] : op
-              "
-              :label="
-                typeof op === 'object' ? op[form.labelKey || 'label'] : op
-              "
-            />
-          </el-select>
-          <el-date-picker
-            v-else-if="form.itemType === 'date'"
-            v-model="params[form.modelValue]"
-            type="date"
-            :placeholder="form.placeholder"
-            :size="form.size ? form.size : size"
-            :disabled="form.disabled"
-            :readonly="form.readonly"
-            :clearable="form.clearable"
-            :editable="form.editable"
-            :style="
-              itemStyle + (form.itemWidth ? `width: ${form.itemWidth};` : '')
-            "
-            :picker-options="form.pickerOptions || {}"
+          <el-option
+            v-for="(op, opIndex) in selectOptions[selectOptionPrefix + index]"
+            :key="opIndex + '_remote'"
+            :value="typeof op === 'object' ? op[form.valueKey || 'value'] : op"
+            :label="typeof op === 'object' ? op[form.labelKey || 'label'] : op"
           />
-          <el-date-picker
-            v-else-if="form.itemType === 'datetime'"
-            v-model="params[form.modelValue]"
-            type="datetime"
-            :placeholder="form.placeholder"
-            :size="form.size ? form.size : size"
-            :disabled="form.disabled"
-            :readonly="form.readonly"
-            :clearable="form.clearable"
-            :editable="form.editable"
-            :style="
-              itemStyle + (form.itemWidth ? `width: ${form.itemWidth};` : '')
-            "
-            :picker-options="form.pickerOptions || {}"
-          />
-          <el-date-picker
-            v-else-if="form.itemType === 'daterange'"
-            v-model="params[form.modelValue]"
-            :size="form.size ? form.size : size"
-            type="daterange"
-            @change="(date) => changeDate(date, form.prop[0], form.prop[1])"
-            :disabled="form.disabled"
-            :readonly="form.readonly"
-            :editable="form.editable"
-            :clearable="form.clearable"
-            :placeholder="form.placeholder"
-            :style="
-              itemStyle + (form.itemWidth ? `width: ${form.itemWidth};` : '')
-            "
-            :picker-options="form.pickerOptions || {}"
-          />
-        </el-form-item>
-        <el-form-item label="" label-width="0">
-          <div style="display:flex;justify-content:flex-end;">
+        </el-select>
+        <el-date-picker
+          v-else-if="form.itemType === 'date'"
+          v-model="params[form.modelValue]"
+          type="date"
+          :placeholder="form.placeholder"
+          :size="form.size ? form.size : size"
+          :disabled="form.disabled"
+          :readonly="form.readonly"
+          :clearable="form.clearable"
+          :editable="form.editable"
+          :style="
+            itemStyle + (form.itemWidth ? `width: ${form.itemWidth};` : '')
+          "
+          :picker-options="form.pickerOptions || {}"
+        />
+        <el-date-picker
+          v-else-if="form.itemType === 'datetime'"
+          v-model="params[form.modelValue]"
+          type="datetime"
+          :placeholder="form.placeholder"
+          :size="form.size ? form.size : size"
+          :disabled="form.disabled"
+          :readonly="form.readonly"
+          :clearable="form.clearable"
+          :editable="form.editable"
+          :style="
+            itemStyle + (form.itemWidth ? `width: ${form.itemWidth};` : '')
+          "
+          :picker-options="form.pickerOptions || {}"
+        />
+        <el-date-picker
+          v-else-if="form.itemType === 'daterange'"
+          v-model="params[form.modelValue]"
+          :size="form.size ? form.size : size"
+          type="daterange"
+          @change="(date) => changeDate(date, form.prop[0], form.prop[1])"
+          :disabled="form.disabled"
+          :readonly="form.readonly"
+          :editable="form.editable"
+          :clearable="form.clearable"
+          :placeholder="form.placeholder"
+          :style="
+            itemStyle + (form.itemWidth ? `width: ${form.itemWidth};` : '')
+          "
+          :picker-options="form.pickerOptions || {}"
+        />
+      </el-form-item>
+      <el-form-item label="" label-width="0">
+        <div
+          :style="{
+            margin: size === 'mini' ? '4px 0' : '0',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }"
+        >
           <el-button
             type="primary"
             :size="size"
@@ -277,8 +295,8 @@
             {{ resetBtnText }}
           </el-button>
           <slot name="formBtn"></slot>
-          </div>
-        </el-form-item>
+        </div>
+      </el-form-item>
     </template>
   </el-form>
 </template>
