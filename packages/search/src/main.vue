@@ -7,7 +7,7 @@
     @submit.native.prevent="searchHandler()"
     :label-width="labelWidth ? labelWidth + 'px' : ''"
   >
-    <el-row :gutter="10" type="flex" justify="between" style="flex-wrap:wrap" v-if="!inline">
+    <el-row :gutter="10" type="flex" justify="between" style="flex-wrap:wrap;align-items:center;" v-if="!inline">
       <el-col
         style="min-width:320px"
         :xs="24"
