@@ -29,6 +29,7 @@
           :label="form.label"
           :rules="form.rules || []"
           :label-width="form.labelWidth ? form.labelWidth + 'px' : ''"
+          style="margin-bottom:6px"
         >
           <el-input
             v-if="form.itemType === 'input' || form.itemType === undefined"
@@ -135,13 +136,14 @@
         :xl="6"
         style="flex: 1 1 375px"
       >
-        <el-form-item label="" label-width="0">
+        <el-form-item label="" label-width="0" style="margin-bottom:6px">
           <div
-            style="
-              display: flex;
-              justify-content: flex-end;
-              align-items: center;
-            "
+            :style="{
+            margin: size === 'mini' ? '4px 0' : '0',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+          }"
           >
             <el-button
               type="primary"
@@ -174,6 +176,7 @@
         :label="form.label"
         :rules="form.rules || []"
         :label-width="form.labelWidth ? form.labelWidth + 'px' : ''"
+        style="margin-bottom:6px"
       >
         <el-input
           v-if="form.itemType === 'input' || form.itemType === undefined"
@@ -267,7 +270,7 @@
           :picker-options="form.pickerOptions || {}"
         />
       </el-form-item>
-      <el-form-item label="" label-width="0">
+      <el-form-item label="" label-width="0" style="margin-bottom:6px">
         <div
           :style="{
             margin: size === 'mini' ? '4px 0' : '0',
